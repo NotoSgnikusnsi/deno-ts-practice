@@ -1,4 +1,5 @@
-import { serveDir } from "https://deno.land/std@0.151.0/http/file_server.ts";
+import { serveDirWithTs } from "https://deno.land/x/ts_serve@v1.4.4/mod.ts";
+import { sum } from "./public/sum.ts";
 
 Deno.serve(async (req) => {
   const pathname = new URL(req.url).pathname;
@@ -8,7 +9,11 @@ Deno.serve(async (req) => {
     return new Response("jigインターンへようこそ！");
   }
 
-  return serveDir(req, {
+  if (req.method === "GET" && pathname === "/sum") {
+    return new Response(sum(234, 110).toString());
+  }
+
+  return serveDirWithTs(req, {
     fsRoot: "public",
     urlRoot: "",
     showDirListing: true,
